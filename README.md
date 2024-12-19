@@ -50,7 +50,7 @@ Ensure you have the following installed before proceeding:
 - **Node.js** (version 14 or higher)
 - **npm** (Node Package Manager)
 - **Supabase Account** (for database setup)
-- **Git** (version control)
+
 
 ---
 
