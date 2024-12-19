@@ -1,5 +1,12 @@
 # Student Management Dashboard
 
+## Demo Video
+
+Check out the demo video below to see the Student Management Dashboard in action:
+
+[Click here to watch the demo video](https://drive.google.com/file/d/1oB2V5dPkxV4EscU9G0uyOYoIy9u1lEFD/view?usp=drive_link)
+
+
 ## Features
 
 1. **Add Students**  

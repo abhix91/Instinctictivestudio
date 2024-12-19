@@ -7,7 +7,7 @@ const Sidenavigation = () => {
   return (
     <>
       {/* Sidebar for Larger Screens */}
-      <div className="hidden lg:flex flex-col bg-white h-screen w-64 shadow-md p-6 fixed top-0 left-0">
+      <div className="hidden lg:flex flex-col bg-white h-screen w-64  p-6 fixed top-0 left-0">
         {/* Logo Section */}
         <div className="flex items-center mb-8">
           <img src="/images/logo.png" alt="Logo" className="h-12 w-auto" />
@@ -45,7 +45,7 @@ const Sidenavigation = () => {
       </div>
 
       {/* Sidebar for Mobile Screens */}
-      
+   
     </>
   );
 };

@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchStudents, createStudent, deleteStudent } from "../state/studentSlice";
+import { fetchStudents, createStudent, updateStudent, deleteStudent } from "../state/studentSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const MobileDashboard = () => {
   const [newStudent, setNewStudent] = useState({ name: "", cohort: "AY 2024-25", courses: [] });
+  const [editStudent, setEditStudent] = useState(null); // Store the student to edit
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // Modal for editing student data
   const dispatch = useDispatch();
   const { list: students, loading, error } = useSelector((state) => state.students);
 
@@ -14,29 +16,47 @@ const MobileDashboard = () => {
     dispatch(fetchStudents());
   }, [dispatch]);
 
-  const handleDeleteStudent = (id) => {
-    dispatch(deleteStudent(id));
-    toast.success("Student deleted successfully!");
+  const handleDeleteStudent = async (id) => {
+    try {
+      await dispatch(deleteStudent(id));
+      toast.success("Student deleted successfully!");
+    } catch (error) {
+      toast.error("Failed to delete student.");
+    }
   };
 
   const handleAddStudent = async (e) => {
     e.preventDefault();
-
     if (!newStudent.name || !newStudent.cohort || newStudent.courses.length === 0) {
       toast.error("Please fill in all fields before submitting.");
       return;
     }
-
-    dispatch(
-      createStudent({
-        Name: newStudent.name,
-        Cohort: newStudent.cohort,
-        Courses: newStudent.courses.join(", "),
-      })
-    );
+    dispatch(createStudent({
+      Name: newStudent.name,
+      Cohort: newStudent.cohort,
+      Courses: newStudent.courses.join(", "),
+    }));
     toast.success("Student added successfully!");
     setNewStudent({ name: "", cohort: "AY 2024-25", courses: [] });
     setIsModalOpen(false);
+  };
+
+  const handleEditStudent = async (e) => {
+    e.preventDefault();
+    if (!editStudent.Name || !editStudent.Cohort || editStudent.Courses.length === 0) {
+      toast.error("Please fill in all fields before updating.");
+      return;
+    }
+    dispatch(updateStudent({
+      id: editStudent.id,
+      studentData: {
+        Name: editStudent.Name,
+        Cohort: editStudent.Cohort,
+        Courses: editStudent.Courses.join(", "),
+      },
+    }));
+    toast.success("Student updated successfully!");
+    setIsEditModalOpen(false);
   };
 
   const handleInputChange = (e) => {
@@ -44,9 +64,19 @@ const MobileDashboard = () => {
     setNewStudent({ ...newStudent, [name]: value });
   };
 
+  const handleEditInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditStudent({ ...editStudent, [name]: value });
+  };
+
   const handleCourseChange = (e) => {
     const selectedCourses = Array.from(e.target.selectedOptions, (option) => option.value);
     setNewStudent({ ...newStudent, courses: selectedCourses });
+  };
+
+  const handleEditCourseChange = (e) => {
+    const selectedCourses = Array.from(e.target.selectedOptions, (option) => option.value);
+    setEditStudent({ ...editStudent, Courses: selectedCourses });
   };
 
   return (
@@ -73,10 +103,19 @@ const MobileDashboard = () => {
             <div className="flex items-center justify-between">
               <h2 className="text-gray-800 font-medium text-sm">{student.Name}</h2>
               <button
-                onClick={() => handleDeleteStudent(student.id)}
+                onClick={() => handleDeleteStudent(student.id)} // Pass the student ID to handleDeleteStudent
                 className="bg-red-500 text-white px-2 py-1 text-xs rounded"
               >
                 Delete
+              </button>
+              <button
+                onClick={() => {
+                  setEditStudent(student);  // Set the student to be edited
+                  setIsEditModalOpen(true);
+                }}
+                className="bg-blue-500 text-white px-2 py-1 text-xs rounded"
+              >
+                Update
               </button>
             </div>
             <div className="text-sm text-gray-600 mt-2">
@@ -91,25 +130,6 @@ const MobileDashboard = () => {
                     {course}
                   </span>
                 ))}
-              </p>
-              <p>
-                <strong>Joined:</strong>{" "}
-                {new Intl.DateTimeFormat("en-US", {
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                }).format(new Date(student.JoinedAt))}
-              </p>
-              <p>
-                <strong>Last Login:</strong>{" "}
-                {new Intl.DateTimeFormat("en-US", {
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  hour12: true,
-                }).format(new Date(student.LastLogin))}
               </p>
             </div>
           </div>
@@ -173,6 +193,66 @@ const MobileDashboard = () => {
                   className="bg-blue-500 text-white px-4 py-2 rounded"
                 >
                   Add
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal for Editing Student */}
+      {isEditModalOpen && editStudent && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-lg font-bold mb-4">Edit Student</h2>
+            <form onSubmit={handleEditStudent}>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-1">Name</label>
+                <input
+                  type="text"
+                  name="Name"
+                  value={editStudent.Name}
+                  onChange={handleEditInputChange}
+                  className="border rounded px-4 py-2 w-full"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-1">Cohort</label>
+                <select
+                  name="Cohort"
+                  value={editStudent.Cohort}
+                  onChange={handleEditInputChange}
+                  className="border rounded px-4 py-2 w-full"
+                >
+                  <option>AY 2024-25</option>
+                </select>
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-1">Courses</label>
+                <select
+                  multiple
+                  value={editStudent.Courses}
+                  onChange={handleEditCourseChange}
+                  className="border rounded px-4 py-2 w-full"
+                >
+                  <option value="CBSE 9 Science">CBSE 9 Science</option>
+                  <option value="CBSE 9 Math">CBSE 9 Math</option>
+                </select>
+              </div>
+              <div className="flex justify-end space-x-4">
+                <button
+                  type="button"
+                  onClick={() => setIsEditModalOpen(false)}
+                  className="bg-gray-300 px-4 py-2 rounded"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                >
+                  Save
                 </button>
               </div>
             </form>

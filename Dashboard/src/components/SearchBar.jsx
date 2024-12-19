@@ -154,45 +154,66 @@ const SearchBar = () => {
       </div>
 
       {/* Mobile Sidebar (Hidden initially, shown on hamburger click) */}
-      <div
-        className={`fixed top-0 left-0 h-screen bg-white shadow-md z-50 transform transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
-        style={{ width: "240px" }}
-      >
-        {/* Logo Section */}
-        <div className="flex items-center p-4">
-          <img src="/images/logo.png" alt="Logo" className="h-10 w-auto" />
-        </div>
+    {/* Mobile SearchBar */}
+<div
+  className="flex lg:hidden bg-white shadow-sm fixed top-0 left-0 w-full px-4 py-2 items-center justify-between"
+  style={{
+    zIndex: 50,
+  }}
+>
+  {/* Hamburger Menu Button */}
+  <div
+    className="fixed top-4 left-4 text-white p-2 rounded cursor-pointer z-50"
+    onClick={toggleSidebar} // Toggle sidebar visibility
+  >
+    <img src="/images/more.png" alt="Menu" className="h-6 w-6" />
+  </div>
 
-        {/* Navigation Links */}
-        <nav className="space-y-4 mt-6">
-          <ul>
-            <li className="flex items-center px-4 py-2 text-gray-500 hover:bg-gray-100 cursor-pointer rounded">
-              <img src="/images/dashboard.png" alt="Dashboard" className="h-6 w-6 mr-3" />
-              <Link to="/">Dashboard</Link>
-            </li>
-            <li className="flex items-center px-4 py-2 text-gray-500 hover:bg-gray-100 cursor-pointer rounded">
-              <img src="/images/student.png" alt="Students" className="h-6 w-6 mr-3" />
-              <Link to="/students">Students</Link>
-            </li>
-            <li className="flex items-center px-4 py-2 text-gray-500 hover:bg-gray-100 cursor-pointer rounded">
-              <img src="/images/chapter.png" alt="Chapter" className="h-6 w-6 mr-3" />
-              <Link to="/chapter">Chapter</Link>
-            </li>
-            <li className="flex items-center px-4 py-2 text-gray-500 hover:bg-gray-100 cursor-pointer rounded">
-              <img src="/images/help.png" alt="Help" className="h-6 w-6 mr-3" />
-              <Link to="/help">Help</Link>
-            </li>
-            <li className="flex items-center px-4 py-2 text-gray-500 hover:bg-gray-100 cursor-pointer rounded">
-              <img src="/images/Reports.png" alt="Reports" className="h-6 w-6 mr-3" />
-              <Link to="/reports">Reports</Link>
-            </li>
-            <li className="flex items-center px-4 py-2 text-gray-500 hover:bg-gray-100 cursor-pointer rounded">
-              <img src="/images/setting.png" alt="Settings" className="h-6 w-6 mr-3" />
-              <Link to="/settings">Settings</Link>
-            </li>
-          </ul>
-        </nav>
-      </div>
+  {/* Search Input */}
+  <div
+    className="flex items-center bg-gray-100 rounded-lg ml-10" // Added margin-left to create space
+    style={{
+      flexGrow: 1,
+      padding: "8px 12px",
+      borderRadius: "12px",
+      gap: "8px",
+    }}
+  >
+    <input
+      type="text"
+      placeholder="Search your course"
+      className="w-full outline-none text-gray-700 bg-gray-100"
+    />
+  </div>
+
+  {/* Icons */}
+  <div className="flex items-center space-x-4 ml-4">
+    <button>
+      <img
+        src="/images/search2.png"
+        alt="Notification Icon"
+        style={{ height: "20px", width: "20px" }}
+      />
+      <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
+    </button>
+    <button>
+      <img
+        src="/images/search3.png"
+        alt="Search Icon"
+        style={{ height: "20px", width: "20px" }}
+      />
+    </button>
+    <div>
+      <img
+        src="/images/user.png"
+        alt="User Profile"
+        style={{ height: "32px", width: "32px" }}
+        className="rounded-full"
+      />
+    </div>
+  </div>
+</div>
+
     </>
   );
 };
