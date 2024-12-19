@@ -4,6 +4,10 @@
   padding: 2rem;
   text-align: center;
 }
+.icon-color {
+  filter: invert(43%) sepia(100%) saturate(201%) hue-rotate(176deg) brightness(92%) contrast(95%);
+}
+
 
 .logo {
   height: 6em;

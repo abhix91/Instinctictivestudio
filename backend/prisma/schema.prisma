@@ -13,5 +13,5 @@ model student {
   Cohort    String
   Courses   String
   JoinedAt  DateTime @default(now())
-  LastLogin DateTime @default(now()) // Automatically set to the current time
+  LastLogin DateTime @default(now())
 }
