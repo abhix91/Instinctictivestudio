@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from "react"; 
 import { Link } from "react-router-dom";
 
 const SearchBar = () => {
@@ -39,7 +39,6 @@ const SearchBar = () => {
             gap: "10px",
           }}
         >
-        
           <input
             type="text"
             placeholder="Search your course"
@@ -101,7 +100,8 @@ const SearchBar = () => {
       >
         {/* Hamburger Menu Button */}
         <div
-          className="fixed top-4 left-4  text-white p-2 rounded cursor-pointer z-50"
+          className="text-white p-2 rounded cursor-pointer z-50"
+          style={{ position: 'absolute', left: '16px' }} // Added left positioning to prevent overlap
           onClick={toggleSidebar} // Toggle sidebar visibility
         >
           <img src="/images/more.png" alt="Menu" className="h-6 w-6" />
@@ -109,7 +109,7 @@ const SearchBar = () => {
 
         {/* Search Input */}
         <div
-          className="flex items-center bg-gray-100 rounded-lg"
+          className="flex items-center bg-gray-100 rounded-lg ml-10" // Added margin-left to create space for the hamburger icon
           style={{
             flexGrow: 1,
             padding: "8px 12px",
@@ -117,7 +117,6 @@ const SearchBar = () => {
             gap: "8px",
           }}
         >
-          
           <input
             type="text"
             placeholder="Search your course"
@@ -154,66 +153,44 @@ const SearchBar = () => {
       </div>
 
       {/* Mobile Sidebar (Hidden initially, shown on hamburger click) */}
-    {/* Mobile SearchBar */}
-<div
-  className="flex lg:hidden bg-white shadow-sm fixed top-0 left-0 w-full px-4 py-2 items-center justify-between"
-  style={{
-    zIndex: 50,
-  }}
->
-  {/* Hamburger Menu Button */}
-  <div
-    className="fixed top-4 left-4 text-white p-2 rounded cursor-pointer z-50"
-    onClick={toggleSidebar} // Toggle sidebar visibility
-  >
-    <img src="/images/more.png" alt="Menu" className="h-6 w-6" />
-  </div>
-
-  {/* Search Input */}
-  <div
-    className="flex items-center bg-gray-100 rounded-lg ml-10" // Added margin-left to create space
-    style={{
-      flexGrow: 1,
-      padding: "8px 12px",
-      borderRadius: "12px",
-      gap: "8px",
-    }}
-  >
-    <input
-      type="text"
-      placeholder="Search your course"
-      className="w-full outline-none text-gray-700 bg-gray-100"
-    />
-  </div>
-
-  {/* Icons */}
-  <div className="flex items-center space-x-4 ml-4">
-    <button>
-      <img
-        src="/images/search2.png"
-        alt="Notification Icon"
-        style={{ height: "20px", width: "20px" }}
-      />
-      <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
-    </button>
-    <button>
-      <img
-        src="/images/search3.png"
-        alt="Search Icon"
-        style={{ height: "20px", width: "20px" }}
-      />
-    </button>
-    <div>
-      <img
-        src="/images/user.png"
-        alt="User Profile"
-        style={{ height: "32px", width: "32px" }}
-        className="rounded-full"
-      />
-    </div>
-  </div>
-</div>
-
+      <div
+        className={`lg:hidden fixed top-0 left-0 h-full w-64 bg-white text-gray-700 p-6 transition-transform transform ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+        style={{
+          zIndex: 50,
+        }}
+      >
+        {/* Sidebar Content */}
+        <nav className="flex-1 space-y-4">
+          <ul>
+            <li className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer rounded">
+              <img src="/images/dashboard.png" alt="Dashboard" className="h-6 w-6 mr-3" />
+              <Link to="/">Dashboard</Link>
+            </li>
+            <li className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer rounded">
+              <img src="/images/student.png" alt="Students" className="h-6 w-6 mr-3" />
+              <Link to="/students">Students</Link>
+            </li>
+            <li className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer rounded">
+              <img src="/images/chapter.png" alt="Chapter" className="h-6 w-6 mr-3" />
+              <Link to="/chapter">Chapter</Link>
+            </li>
+            <li className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer rounded">
+              <img src="/images/help.png" alt="Help" className="h-6 w-6 mr-3" />
+              <Link to="/help">Help</Link>
+            </li>
+            <li className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer rounded">
+              <img src="/images/Reports.png" alt="Reports" className="h-6 w-6 mr-3" />
+              <Link to="/reports">Reports</Link>
+            </li>
+            <li className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer rounded">
+              <img src="/images/setting.png" alt="Settings" className="h-6 w-6 mr-3" />
+              <Link to="/settings">Settings</Link>
+            </li>
+          </ul>
+        </nav>
+      </div>
     </>
   );
 };
