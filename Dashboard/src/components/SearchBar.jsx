@@ -3,7 +3,7 @@ import React from "react";
 const SearchBar = () => {
   return (
     <div
-      className="bg-##F6F8FA flex items-center justify-between "
+      className="bg-##F6F8FA flex items-center justify-between shadow-sm"
       style={{
         width: "1152px",
         height: "48px",

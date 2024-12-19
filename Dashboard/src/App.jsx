@@ -3,6 +3,7 @@ import Sidenavigation from "./components/Sidenavigation";
 import SearchBar from "./components/SearchBar";
 import Dashboard from "./components/Dashboard";
 
+
 const App = () => {
   return (
     <div
@@ -21,6 +22,7 @@ const App = () => {
 
         {/* Dashboard Content */}
         <div className="p-4 sm:p-6 flex-1 overflow-auto">
+          
           <Dashboard />
         </div>
       </div>

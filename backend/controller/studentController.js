@@ -24,7 +24,7 @@ class studentController {
 
   static async create(req, res) {
     try {
-      const student = await StudentModel.createStudent(req.body);
+      const student = await StudentModel.createStudent(req.body); // Use the model method
       res.status(201).json(student);
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -39,11 +39,15 @@ class studentController {
       res.status(500).json({ error: error.message });
     }
   }
+  
 
   static async delete(req, res) {
     try {
-      await StudentModel.deleteStudent(req.params.id);
-      res.status(204).send();
+      const deletedStudent = await StudentModel.deleteStudent(req.params.id);
+      res.status(200).json({
+        message: "Deleted successfully",
+        student: deletedStudent,
+      });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

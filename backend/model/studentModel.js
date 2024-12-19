@@ -11,7 +11,22 @@ class studentModel {
   }
 
   static async createStudent(data) {
-    return prisma.student.create({ data });
+    // Fetch all student IDs
+    const allStudents = await prisma.student.findMany({ select: { id: true } });
+    const allIds = allStudents.map(student => student.id);
+
+    // Find the smallest missing ID
+    const nextId = Math.min(
+      ...Array.from(
+        { length: Math.max(...allIds, 0) + 2 }, // Handles empty database case
+        (_, i) => i + 1
+      ).filter(id => !allIds.includes(id))
+    );
+
+    // Insert the new student with the calculated ID
+    return prisma.student.create({
+      data: { ...data, id: nextId },
+    });
   }
 
   static async updateStudent(id, data) {
