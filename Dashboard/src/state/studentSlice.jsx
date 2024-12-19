@@ -2,12 +2,12 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // Async actions for CRUD operations
 export const fetchStudents = createAsyncThunk("students/fetchStudents", async () => {
-  const response = await fetch("http://localhost:5000/students/");
+  const response = await fetch("https://instinctictivestudio-1.onrender.com/students/");
   return response.json();
 });
 
 export const createStudent = createAsyncThunk("students/createStudent", async (studentData) => {
-  const response = await fetch("http://localhost:5000/students/", {
+  const response = await fetch("https://instinctictivestudio-1.onrender.com/students/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(studentData),
@@ -16,7 +16,7 @@ export const createStudent = createAsyncThunk("students/createStudent", async (s
 });
 
 export const updateStudent = createAsyncThunk("students/updateStudent", async ({ id, studentData }) => {
-  const response = await fetch(`http://localhost:5000/students/${id}`, {
+  const response = await fetch(`https://instinctictivestudio-1.onrender.com/students/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(studentData),
@@ -25,7 +25,7 @@ export const updateStudent = createAsyncThunk("students/updateStudent", async ({
 });
 
 export const deleteStudent = createAsyncThunk("students/deleteStudent", async (id) => {
-  await fetch(`http://localhost:5000/students/${id}`, { method: "DELETE" });
+  await fetch(`https://instinctictivestudio-1.onrender.com/students/${id}`, { method: "DELETE" });
   return id;
 });
 
