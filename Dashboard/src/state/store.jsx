@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import studentReducer from "./studentSlice/studentSlice";
+import studentReducer from "./studentSlice";
 
 const store = configureStore({
   reducer: {
-    students: studentReducer,
+    students: studentReducer, // Manage students state
   },
 });
 

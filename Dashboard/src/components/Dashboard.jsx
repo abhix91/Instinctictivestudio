@@ -1,134 +1,73 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  fetchStudents,
+  createStudent,
+  updateStudent,
+  deleteStudent,
+} from "../state/studentSlice";
 
 const Dashboard = () => {
-  const [students, setStudents] = useState([]);
-  const [newStudent, setNewStudent] = useState({
-    name: "",
-    cohort: "AY 2024-25",
-    courses: [],
-  });
+  const [newStudent, setNewStudent] = useState({ name: "", cohort: "AY 2024-25", courses: [] });
   const [editStudent, setEditStudent] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
 
-  // Fetch students from the backend
-  const fetchStudents = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/students/");
-      const data = await response.json();
-      setStudents(data);
-    } catch (error) {
-      console.error("Error fetching students:", error);
-    }
-  };
+  const { list: students, loading, error } = useSelector((state) => state.students);
 
   useEffect(() => {
-    fetchStudents();
-  }, []);
+    dispatch(fetchStudents());
+  }, [dispatch]);
 
-  // Handle form submission for adding a new student
-  const handleFormSubmit = async (e) => {
+  const handleAddStudent = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      const response = await fetch("http://localhost:5000/students/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          Name: newStudent.name,
-          Cohort: newStudent.cohort,
-          Courses: newStudent.courses.join(", "),
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to add student");
-      }
-
-      await fetchStudents();
-      setNewStudent({ name: "", cohort: "AY 2024-25", courses: [] });
-      setIsModalOpen(false);
-      setIsLoading(false);
-    } catch (error) {
-      console.error("Error adding student:", error.message);
-      setIsLoading(false);
-    }
+    dispatch(
+      createStudent({
+        Name: newStudent.name,
+        Cohort: newStudent.cohort,
+        Courses: newStudent.courses.join(", "),
+      })
+    );
+    setNewStudent({ name: "", cohort: "AY 2024-25", courses: [] });
+    setIsModalOpen(false);
   };
 
-  // Handle form submission for updating a student
-  const handleUpdateFormSubmit = async (e) => {
+  const handleEditStudent = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      const response = await fetch(`http://localhost:5000/students/${editStudent.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+    dispatch(
+      updateStudent({
+        id: editStudent.id,
+        studentData: {
           Name: editStudent.Name,
           Cohort: editStudent.Cohort,
           Courses: editStudent.Courses.join(", "),
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to update student");
-      }
-
-      await fetchStudents();
-      setIsEditModalOpen(false);
-      setEditStudent(null);
-      setIsLoading(false);
-    } catch (error) {
-      console.error("Error updating student:", error.message);
-      setIsLoading(false);
-    }
+        },
+      })
+    );
+    setEditStudent(null);
+    setIsEditModalOpen(false);
   };
 
-  // Handle delete student
-  const handleDelete = async (id) => {
-    try {
-      const response = await fetch(`http://localhost:5000/students/${id}`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to delete student");
-      }
-
-      setStudents((prev) => prev.filter((student) => student.id !== id));
-    } catch (error) {
-      console.error("Error deleting student:", error.message);
-    }
+  const handleDeleteStudent = (id) => {
+    dispatch(deleteStudent(id));
   };
 
-  // Handle input changes for adding a student
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewStudent({ ...newStudent, [name]: value });
   };
 
-  // Handle input changes for editing a student
   const handleEditInputChange = (e) => {
     const { name, value } = e.target;
     setEditStudent({ ...editStudent, [name]: value });
   };
 
-  // Handle course selection changes for adding a student
   const handleCourseChange = (e) => {
     const selectedCourses = Array.from(e.target.selectedOptions, (option) => option.value);
     setNewStudent({ ...newStudent, courses: selectedCourses });
   };
 
-  // Handle course selection changes for editing a student
   const handleEditCourseChange = (e) => {
     const selectedCourses = Array.from(e.target.selectedOptions, (option) => option.value);
     setEditStudent({ ...editStudent, Courses: selectedCourses });
@@ -181,7 +120,7 @@ const Dashboard = () => {
               <th className="p-3">Cohort</th>
               <th className="p-3">Courses</th>
               <th className="p-3">Date Joined</th>
-              <th className="p-3">Last login</th>
+              <th className="p-3">Last Login</th>
               <th className="p-3">Actions</th>
             </tr>
           </thead>
@@ -219,7 +158,7 @@ const Dashboard = () => {
                     Update
                   </button>
                   <button
-                    onClick={() => handleDelete(student.id)}
+                    onClick={() => handleDeleteStudent(student.id)}
                     className="bg-red-500 text-white px-3 py-1 rounded"
                   >
                     Delete
@@ -236,7 +175,7 @@ const Dashboard = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-lg font-bold mb-4">Add New Student</h2>
-            <form onSubmit={handleFormSubmit}>
+            <form onSubmit={handleAddStudent}>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-1">Name</label>
                 <input
@@ -281,26 +220,22 @@ const Dashboard = () => {
                 </button>
                 <button
                   type="submit"
-                  className={`${
-                    isLoading ? "bg-gray-500" : "bg-blue-500"
-                  } text-white px-4 py-2 rounded`}
-                  disabled={isLoading}
+                  className="bg-blue-500 text-white px-4 py-2 rounded"
                 >
-                  {isLoading ? "Processing..." : "Add"}
+                  Add
                 </button>
               </div>
             </form>
           </div>
-         
         </div>
       )}
 
-      {/* Modal for Updating Student */}
+      {/* Modal for Editing Student */}
       {isEditModalOpen && editStudent && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-lg font-bold mb-4">Update Student</h2>
-            <form onSubmit={handleUpdateFormSubmit}>
+            <h2 className="text-lg font-bold mb-4">Edit Student</h2>
+            <form onSubmit={handleEditStudent}>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-1">Name</label>
                 <input
@@ -345,12 +280,9 @@ const Dashboard = () => {
                 </button>
                 <button
                   type="submit"
-                  className={`${
-                    isLoading ? "bg-gray-500" : "bg-yellow-500"
-                  } text-white px-4 py-2 rounded`}
-                  disabled={isLoading}
+                  className="bg-yellow-500 text-white px-4 py-2 rounded"
                 >
-                  {isLoading ? "Processing..." : "Update"}
+                  Update
                 </button>
               </div>
             </form>

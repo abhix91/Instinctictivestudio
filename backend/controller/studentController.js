@@ -40,6 +40,7 @@ class studentController {
     }
   }
   
+  
 
   static async delete(req, res) {
     try {

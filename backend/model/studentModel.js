@@ -28,6 +28,7 @@ class studentModel {
       data: { ...data, id: nextId },
     });
   }
+ 
 
   static async updateStudent(id, data) {
     return prisma.student.update({ where: { id: parseInt(id) }, data });
