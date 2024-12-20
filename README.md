@@ -1,5 +1,11 @@
 # Student Management Dashboard
 
+## Deployment
+
+Check out the deployed project, which is fully responsive across all devices.
+
+https://instinctictivestudio.netlify.app/
+
 ## Demo Video
 
 Check out the demo video below to see the Student Management Dashboard in action:
